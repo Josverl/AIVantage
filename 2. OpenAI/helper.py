@@ -30,12 +30,17 @@ def get_completion(prompt: Union[str, List], *, temperature=0.3, model="gpt-4-32
         messages = [{"role": "user", "content": prompt}]
     else:
         messages = prompt
-    completion = client.chat.completions.create(
-        model=model,
-        messages=messages, # type: ignore
-        temperature=temperature,
-        timeout=timeout
-    )  # type: ignore
-    message = completion.choices[0].message.content
-    return message
+    try:
+        completion = client.chat.completions.create(
+            model=model,
+            messages=messages, # type: ignore
+            temperature=temperature,
+            timeout=timeout
+        )  # type: ignore
+        message = completion.choices[0].message.content
+        return message
+    except Exception as e:
+        print(e)
+        return "Sorry, I couldn't understand that or an timeout or error occurred. Please try again."
 
+ask = get_completion
